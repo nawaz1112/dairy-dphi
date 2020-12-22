@@ -1,24 +1,32 @@
-import logo from './logo.svg';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
+import Navbar from './components/Topbar';
+import Notes from './components/Notes';
+import Createnote from './components/CreateNote';
+import CurrentNote from './components/CurrentNote';
+import { data } from "./data.json";
+import { useState, useEffect } from 'react';
 
 function App() {
+  const [state, setState] = useState([]);  
+  useEffect(() => {
+    setState(data);
+  }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Navbar />
+      <Switch>
+        <Route path="/" exact>
+          <Notes notesData={state} />
+        </Route>
+        <Route path="/note" exact>
+          <Createnote setState={setState} state={state} />
+        </Route>
+        <Route path="/note/:id">
+          <CurrentNote setState={setState} state={state} /> 
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 
